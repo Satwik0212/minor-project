@@ -1,0 +1,34 @@
+sequenceDiagram
+    autonumber
+    participant ESP as ESP32 Device
+    participant Broker as MQTT Broker (TLS/ACL)
+    participant Worker as MQTT Worker Process
+    participant DB as PostgreSQL/PostGIS
+    participant Logic as Domain Services
+    participant API as FastAPI REST
+    participant UI as Admin Web UI
+
+    ESP->>Broker: Publish JSON to smartwaste/device/{device_id}/telemetry
+    Broker->>Worker: Forward message after ACL check
+    Worker->>Worker: Validate topic ID, JSON schema, schema_version
+    alt malformed, unknown, revoked, or identity mismatch
+        Worker->>DB: Store redacted rejected_telemetry_events + reason
+        Worker-->>Broker: ACK delivery; no domain side effects
+    else valid message
+        Worker->>DB: Resolve active device_bin_assignment
+        Worker->>DB: Deduplicate (device_id, boot_id, sequence)
+        alt duplicate message
+            Worker-->>Broker: ACK duplicate; do not insert twice
+        else new message
+            Worker->>DB: Load current calibration/version
+            Worker->>Worker: Validate measurements; compute fill_percent server-side
+            Worker->>DB: Insert immutable sensor_reading + received_at + quality
+            Worker->>DB: Upsert bin_latest_state
+            Worker->>Logic: Trigger eligible alert/candidate rules
+            Logic->>DB: Persist alerts/candidates idempotently
+        end
+    end
+    UI->>API: GET /api/v1/readings/latest
+    API->>DB: Query latest eligible readings/state
+    DB-->>API: JSON-serializable records
+    API-->>UI: HTTPS JSON response

@@ -1,0 +1,6 @@
+listener 8883
+protocol mqtt
+allow_anonymous false
+persistence true
+persistence_location /mosquitto/data/
+# Configure CA/certificate/key, password file and ACL file before use.

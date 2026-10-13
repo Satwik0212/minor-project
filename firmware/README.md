@@ -1,0 +1,1 @@
+ESP32 reads sensors, performs local sanity checks, publishes versioned MQTT/TLS telemetry/status, receives config and acknowledges config versions. It does not compute authoritative fill or optimize routes.

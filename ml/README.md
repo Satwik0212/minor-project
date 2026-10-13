@@ -1,0 +1,1 @@
+Prediction pipeline using Pandas/NumPy/scikit-learn/XGBoost. Require sufficient validated history, leakage-safe time splits, baselines, model versioning and evaluation. Three demo bins do not prove reliable ML accuracy.

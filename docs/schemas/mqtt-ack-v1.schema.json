@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://swm-ics.local/schemas/mqtt-ack-v1.schema.json",
+  "title": "SWM-ICS MQTT Ack v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "device_id",
+    "config_version",
+    "timestamp",
+    "status",
+    "error_code"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+    },
+    "config_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "status": {
+      "enum": [
+        "APPLIED",
+        "REJECTED"
+      ]
+    },
+    "error_code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "APPLIED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "error_code": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "REJECTED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "error_code": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}

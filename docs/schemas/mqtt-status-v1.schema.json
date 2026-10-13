@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://swm-ics.local/schemas/mqtt-status-v1.schema.json",
+  "title": "SWM-ICS MQTT Status v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "device_id",
+    "boot_id",
+    "timestamp",
+    "event",
+    "firmware_version",
+    "sensor_faults",
+    "rssi_dbm"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+    },
+    "boot_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "event": {
+      "enum": [
+        "ONLINE",
+        "FAULT",
+        "MAINTENANCE",
+        "REBOOTED"
+      ]
+    },
+    "firmware_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "sensor_faults": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ULTRASONIC_TIMEOUT",
+          "ULTRASONIC_OUT_OF_RANGE",
+          "LOAD_CELL_NOT_READY",
+          "LOAD_CELL_CALIBRATION_MISSING",
+          "ENV_SENSOR_READ_FAILED",
+          "I2C_ERROR",
+          "ADC_ERROR",
+          "LOW_BATTERY",
+          "UNKNOWN_SENSOR_FAULT"
+        ]
+      }
+    },
+    "rssi_dbm": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": -150,
+      "maximum": 0
+    },
+    "reason_code": {
+      "type": "string",
+      "maxLength": 80
+    }
+  }
+}

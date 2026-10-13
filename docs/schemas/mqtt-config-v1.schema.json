@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://swm-ics.local/schemas/mqtt-config-v1.schema.json",
+  "title": "SWM-ICS MQTT Config v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "config_version",
+    "issued_at",
+    "sampling_interval_seconds",
+    "sensor_settings"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "config_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "sampling_interval_seconds": {
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 86400
+    },
+    "sensor_settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "distance_min_cm",
+        "distance_max_cm",
+        "weight_enabled",
+        "environment_enabled"
+      ],
+      "properties": {
+        "distance_min_cm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "distance_max_cm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "weight_enabled": {
+          "type": "boolean"
+        },
+        "environment_enabled": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

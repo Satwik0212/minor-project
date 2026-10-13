@@ -1,0 +1,51 @@
+flowchart LR
+    subgraph HW["Hardware / IoT"]
+        S["Ultrasonic + Load Cell/HX711 + BME280/DHT22"]
+        ESP["ESP32 firmware<br/>raw measurements + device health"]
+        S --> ESP
+    end
+    subgraph MSG["MQTT/TLS Bridge"]
+        B["MQTT Broker<br/>per-device ACL"]
+        W["Separate MQTT Worker"]
+        ESP -->|"JSON telemetry/status"| B
+        B --> W
+    end
+    subgraph BE["Backend — Python / FastAPI"]
+        V["Schema + topic identity validation"]
+        A["Resolve active device ↔ bin assignment"]
+        D["Deduplicate: device_id + boot_id + sequence"]
+        C["Calibration lookup + server-side fill calculation"]
+        R["Readings + latest-state projection"]
+        L["Alerts + collection candidates"]
+        V --> A --> D --> C --> R --> L
+        W --> V
+    end
+    subgraph DB["PostgreSQL + PostGIS"]
+        T[("sensor_readings")]
+        LS[("bin_latest_state")]
+        REG[("registry / calibration / routes / jobs / audit")]
+    end
+    R --> T
+    R --> LS
+    A <--> REG
+    L <--> REG
+    subgraph INTEL["Async Intelligence"]
+        OSRM["OSRM road matrix"]
+        OR["OR-Tools route optimization"]
+        ML["XGBoost prediction"]
+        OSRM --> OR
+    end
+    REG --> OSRM
+    T --> ML
+    ML --> REG
+    subgraph WEB["Responsive Browser App"]
+        API["HTTPS REST /api/v1"]
+        ADM["Admin / Operator UI"]
+        DRV["Driver UI"]
+        ADM --> API
+        DRV --> API
+    end
+    API <--> REG
+    API <--> T
+    L --> API
+    OR --> REG

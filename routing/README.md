@@ -1,0 +1,1 @@
+OSRM road distance/duration matrix + OR-Tools optimization. API returns 202 + task_id; route is draft until operator review. Capacity-safe optimization requires measured weight or configured nominal bin weight.

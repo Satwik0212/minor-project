@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://swm-ics.local/schemas/mqtt-telemetry-v1.schema.json",
+  "title": "SWM-ICS MQTT Telemetry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "message_id",
+    "device_id",
+    "boot_id",
+    "sequence",
+    "timestamp",
+    "time_synced",
+    "firmware_version",
+    "measurements",
+    "health"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "message_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "device_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+    },
+    "boot_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "timestamp": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "time_synced": {
+      "type": "boolean"
+    },
+    "firmware_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "measurements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "distance_cm",
+        "weight_kg",
+        "temperature_c",
+        "humidity_percent"
+      ],
+      "properties": {
+        "distance_cm": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "weight_kg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "temperature_c": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -50,
+          "maximum": 150
+        },
+        "humidity_percent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reported_state",
+        "sensor_faults",
+        "rssi_dbm",
+        "battery_percent"
+      ],
+      "properties": {
+        "reported_state": {
+          "enum": [
+            "ONLINE",
+            "FAULT",
+            "MAINTENANCE"
+          ]
+        },
+        "sensor_faults": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ULTRASONIC_TIMEOUT",
+              "ULTRASONIC_OUT_OF_RANGE",
+              "LOAD_CELL_NOT_READY",
+              "LOAD_CELL_CALIBRATION_MISSING",
+              "ENV_SENSOR_READ_FAILED",
+              "I2C_ERROR",
+              "ADC_ERROR",
+              "LOW_BATTERY",
+              "UNKNOWN_SENSOR_FAULT"
+            ]
+          }
+        },
+        "rssi_dbm": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": -150,
+          "maximum": 0
+        },
+        "battery_percent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "time_synced": {
+            "const": true
+          }
+        },
+        "required": [
+          "time_synced"
+        ]
+      },
+      "then": {
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "time_synced": {
+            "const": false
+          }
+        },
+        "required": [
+          "time_synced"
+        ]
+      },
+      "then": {
+        "properties": {
+          "timestamp": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

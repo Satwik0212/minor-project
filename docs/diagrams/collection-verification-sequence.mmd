@@ -1,0 +1,30 @@
+sequenceDiagram
+    autonumber
+    participant Driver as Driver Browser
+    participant API as FastAPI
+    participant DB as PostgreSQL/PostGIS
+    participant OTP as OTP Delivery Provider
+    participant Worker as MQTT Worker
+
+    Driver->>API: POST /api/v1/collections/{job_id}/depart
+    API->>DB: Verify assignment; status ASSIGNED → EN_ROUTE
+    Driver->>API: POST /api/v1/collections/{job_id}/arrive {lat, lon, captured_at}
+    API->>DB: Validate geofence; status EN_ROUTE → ARRIVED
+    Driver->>API: POST /api/v1/collections/{job_id}/otp/issue
+    API->>OTP: Deliver OTP to configured facility contact
+    Driver->>API: POST /api/v1/collections/{job_id}/start {otp}
+    API->>DB: Validate OTP, expiry, attempts; capture fresh before reading
+    API-->>Driver: Status COLLECTING + before evidence status
+    Driver->>API: POST /api/v1/collections/{job_id}/finish {lat, lon, captured_at}
+    API->>DB: Record pickup_finished_at; status remains COLLECTING
+    Worker->>DB: Insert new telemetry readings after pickup_finished_at
+    Driver->>API: POST /api/v1/collections/{job_id}/verify {lat, lon, captured_at}
+    API->>DB: Select fresh after reading server-side; compare evidence
+    alt all rules pass
+        API->>DB: COLLECTING → VERIFIED; audit evidence
+        API-->>Driver: VERIFIED
+    else evidence missing or threshold failed
+        API->>DB: COLLECTING → ANOMALY; open COLLECTION_ANOMALY alert
+        API-->>Driver: ANOMALY + reason codes
+    end
+    Note over API,DB: Operator may override ANOMALY → VERIFIED only with reason and audit

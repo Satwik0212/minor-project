@@ -1,0 +1,6 @@
+# Example only; verify syntax for the selected broker.
+# user ESP32-A123
+# topic write smartwaste/device/ESP32-A123/telemetry
+# topic write smartwaste/device/ESP32-A123/status
+# topic write smartwaste/device/ESP32-A123/ack
+# topic read smartwaste/device/ESP32-A123/config

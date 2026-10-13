@@ -1,0 +1,30 @@
+sequenceDiagram
+    autonumber
+    participant UI as Admin Web UI
+    participant API as FastAPI
+    participant DB as PostgreSQL/PostGIS
+    participant Task as Background Task Queue/Worker
+    participant OSRM as OSRM Routing API
+    participant OR as Google OR-Tools
+
+    UI->>API: POST /api/v1/routes/optimize {candidate_ids, vehicle_ids, objective}
+    API->>DB: Validate permissions, candidate status, vehicle capacity, depot
+    API-->>UI: 202 Accepted {task_id, status: QUEUED}
+    API->>Task: Enqueue optimization task
+    Task->>DB: Load candidate bins, mass estimates, depots, vehicle capacities
+    Task->>OSRM: Request road-distance/duration matrix
+    alt OSRM unavailable or matrix invalid
+        Task->>DB: Mark task FAILED; persist ROUTE_FAILURE alert
+    else valid matrix
+        Task->>OR: Solve capacity-constrained vehicle routing problem
+        alt feasible solution
+            Task->>DB: Persist draft routes/stops; task SUCCEEDED
+        else infeasible solution
+            Task->>DB: Mark task FAILED with INFEASIBLE reason
+        end
+    end
+    UI->>API: GET /api/v1/tasks/{task_id}
+    API->>DB: Read task status/progress/result reference
+    API-->>UI: QUEUED/RUNNING/SUCCEEDED/FAILED + result
+    UI->>API: POST /api/v1/routes/{route_id}/assign
+    API->>DB: Transactionally assign route + linked collection jobs
