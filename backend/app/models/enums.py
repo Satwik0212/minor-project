@@ -1,0 +1,165 @@
+"""Canonical enumerations for SWM-ICS domain models.
+
+Normative source: docs/integration.md and docs/database.md.
+"""
+from enum import Enum
+
+
+class UserRole(str, Enum):
+    SUPER_ADMIN = "SUPER_ADMIN"
+    OPERATOR = "OPERATOR"
+    DRIVER = "DRIVER"
+
+
+class BinType(str, Enum):
+    MUNICIPAL = "MUNICIPAL"
+    RECYCLING = "RECYCLING"
+    ORGANIC = "ORGANIC"
+    HAZARDOUS = "HAZARDOUS"
+    OTHER = "OTHER"
+
+
+class BinStatus(str, Enum):
+    DRAFT = "DRAFT"
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    MAINTENANCE = "MAINTENANCE"
+    RETIRED = "RETIRED"
+
+
+class DeviceLifecycleState(str, Enum):
+    UNPROVISIONED = "UNPROVISIONED"
+    PAIRED = "PAIRED"
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    RETIRED = "RETIRED"
+
+
+class DeviceReportedState(str, Enum):
+    ONLINE = "ONLINE"
+    OFFLINE = "OFFLINE"
+    FAULT = "FAULT"
+    MAINTENANCE = "MAINTENANCE"
+
+
+class SensorHealth(str, Enum):
+    OK = "OK"
+    DEGRADED = "DEGRADED"
+    FAULT = "FAULT"
+
+
+class TimestampQuality(str, Enum):
+    DEVICE_SYNCED = "DEVICE_SYNCED"
+    SERVER_RECEIVED_FALLBACK = "SERVER_RECEIVED_FALLBACK"
+
+
+class FillPriority(str, Enum):
+    UNKNOWN = "UNKNOWN"
+    NORMAL = "NORMAL"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+
+class PredictedPriority(str, Enum):
+    NONE = "NONE"
+    PREDICTED_HIGH = "PREDICTED_HIGH"
+    PREDICTED_CRITICAL = "PREDICTED_CRITICAL"
+
+
+class VehicleType(str, Enum):
+    VAN = "VAN"
+    TRUCK = "TRUCK"
+    COMPACTOR = "COMPACTOR"
+    OTHER = "OTHER"
+
+
+class VehicleStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    MAINTENANCE = "MAINTENANCE"
+    RETIRED = "RETIRED"
+
+
+class DriverStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
+    ON_LEAVE = "ON_LEAVE"
+
+
+class JobSource(str, Enum):
+    THRESHOLD = "THRESHOLD"
+    PREDICTION = "PREDICTION"
+    MANUAL = "MANUAL"
+
+
+class JobStatus(str, Enum):
+    PENDING = "PENDING"
+    ASSIGNED = "ASSIGNED"
+    EN_ROUTE = "EN_ROUTE"
+    ARRIVED = "ARRIVED"
+    COLLECTING = "COLLECTING"
+    VERIFIED = "VERIFIED"
+    ANOMALY = "ANOMALY"
+    CANCELLED = "CANCELLED"
+    FAILED = "FAILED"
+
+
+class RouteStatus(str, Enum):
+    DRAFT = "DRAFT"
+    OPTIMIZED = "OPTIMIZED"
+    ASSIGNED = "ASSIGNED"
+    IN_PROGRESS = "IN_PROGRESS"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
+
+
+class RouteObjective(str, Enum):
+    MIN_DISTANCE = "MIN_DISTANCE"
+    MIN_DURATION = "MIN_DURATION"
+    DISTANCE_WITH_PRIORITY = "DISTANCE_WITH_PRIORITY"
+
+
+class VerificationOutcome(str, Enum):
+    VERIFIED = "VERIFIED"
+    ANOMALY = "ANOMALY"
+
+
+class AlertSeverity(str, Enum):
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
+
+
+class AlertStatus(str, Enum):
+    OPEN = "OPEN"
+    ACKNOWLEDGED = "ACKNOWLEDGED"
+    RESOLVED = "RESOLVED"
+    DISMISSED = "DISMISSED"
+
+
+class AlertType(str, Enum):
+    BIN_THRESHOLD = "BIN_THRESHOLD"
+    DEVICE_OFFLINE = "DEVICE_OFFLINE"
+    DEVICE_FAULT = "DEVICE_FAULT"
+    PREDICTED_CRITICAL = "PREDICTED_CRITICAL"
+    AREA_HOTSPOT = "AREA_HOTSPOT"
+    COLLECTION_OVERDUE = "COLLECTION_OVERDUE"
+    ROUTE_FAILURE = "ROUTE_FAILURE"
+    TELEMETRY_REJECTED = "TELEMETRY_REJECTED"
+    SENSOR_ANOMALY = "SENSOR_ANOMALY"
+    GPS_OUTSIDE_GEOFENCE = "GPS_OUTSIDE_GEOFENCE"
+    OTP_FAILURE = "OTP_FAILURE"
+    COLLECTION_ANOMALY = "COLLECTION_ANOMALY"
+    LOW_BATTERY = "LOW_BATTERY"
+    VEHICLE_OVERLOAD = "VEHICLE_OVERLOAD"
+    COMMUNICATION_FAILURE = "COMMUNICATION_FAILURE"
+
+
+class BackgroundTaskStatus(str, Enum):
+    QUEUED = "QUEUED"
+    RUNNING = "RUNNING"
+    SUCCEEDED = "SUCCEEDED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"

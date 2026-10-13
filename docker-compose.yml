@@ -12,6 +12,12 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-  # Add API, broker and worker services after secrets and health checks are configured.
+
+  broker:
+    image: eclipse-mosquitto:2
+    ports:
+      - "${MQTT_BROKER_PORT:-1883}:1883"
+    volumes:
+      - ./infra/mqtt/mosquitto.local.conf:/mosquitto/config/mosquitto.conf:ro
 volumes:
   swm_ics_pgdata:

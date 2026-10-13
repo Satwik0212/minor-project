@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from sqlalchemy import text
 from app.db.session import engine
 router = APIRouter(tags=["health"])
+@router.get("/health")
 @router.get("/health/live")
 def live(): return {"status": "ok"}
 @router.get("/health/ready")
