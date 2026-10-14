@@ -80,11 +80,9 @@ python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
   *(Planned for Milestone 3: Firebase ID token verification will be attached to production operational routes. Do not implement fake auth on the frontend now.)*
 
 - **CORS Allowed Origins:**
-  By default, `http://localhost:5500` and `http://127.0.0.1:5500` (VS Code Live Server) are allowed.
-  If running Vite (`http://localhost:5173`), append it in `.env`:
-  ```
-  CORS_ALLOWED_ORIGINS=http://localhost:5500,http://127.0.0.1:5500,http://localhost:5173
-  ```
+  By default, `backend/app/core/config.py` allows:
+  `http://localhost:5173`, `http://127.0.0.1:5173`, `http://localhost:5500`, `http://127.0.0.1:5500`, `http://localhost:3000`, `http://127.0.0.1:3000`.
+  In addition, `frontend/vite.config.js` configures a reverse proxy forwarding `/api` and `/health` to `http://127.0.0.1:8000`, eliminating browser CORS issues in development.
 
 ---
 
@@ -92,15 +90,15 @@ python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 Base URL: `http://localhost:8000/api/v1`
 
-### Health (Root Paths)
+### Health Check Endpoints
 
-> **Note:** Health check endpoints are located at the server root, outside the `/api/v1` namespace.
+> **Note:** Health check endpoints are mounted at both the server root (`/health/*`) and under the API namespace (`/api/v1/health/*`).
 
 | Method | Path | Description | Response Example |
 |--------|------|-------------|------------------|
-| `GET` | `/health` | Liveness check (alias) | `{"status": "ok"}` |
-| `GET` | `/health/live` | Canonical liveness check | `{"status": "ok"}` |
-| `GET` | `/health/ready` | Database readiness check | `{"status": "ready", "database": "ok"}` |
+| `GET` | `/health` or `/api/v1/health` | Liveness check (alias) | `{"status": "ok"}` |
+| `GET` | `/health/live` or `/api/v1/health/live` | Canonical liveness check | `{"status": "ok"}` |
+| `GET` | `/health/ready` or `/api/v1/health/ready` | Database readiness check | `{"status": "ready", "database": "ok"}` |
 
 ### Feature 1 — Smart Bin Monitoring
 

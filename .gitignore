@@ -37,3 +37,14 @@ ml/artifacts/*
 *.joblib
 *.pkl
 *.onnx
+
+# Databases & local storage
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Frontend build & cache
+.vite/

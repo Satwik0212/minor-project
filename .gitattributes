@@ -1,0 +1,42 @@
+# Auto-detect text files and normalize line endings to LF
+* text=auto eol=lf
+
+# Explicit text files
+*.py text eol=lf diff=python
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+*.sh text eol=lf
+*.env.example text eol=lf
+*.cpp text eol=lf diff=cpp
+*.h text eol=lf diff=cpp
+*.hpp text eol=lf diff=cpp
+*.sql text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+*.pyc binary
+*.pkl binary
+*.joblib binary
+*.onnx binary

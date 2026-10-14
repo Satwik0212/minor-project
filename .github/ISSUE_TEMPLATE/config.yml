@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Architecture & Contract Documentation
+    url: https://github.com/satwik0212/minor-project/tree/main/docs
+    about: Read our integration specs, architectural invariants, and database designs.
+  - name: Development Roadmap
+    url: https://github.com/satwik0212/minor-project/blob/main/docs/DEVELOPMENT-ROADMAP.md
+    about: Check ongoing milestone progress and planned capabilities.

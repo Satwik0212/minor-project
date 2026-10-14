@@ -4,7 +4,10 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://swm_ics:change_me@localhost:5432/swm_ics"
     log_level: str = "INFO"
     firebase_project_id: str = ""
-    cors_allowed_origins: str = "http://localhost:5500"
+    cors_allowed_origins: str = (
+        "http://localhost:5173,http://127.0.0.1:5173,http://localhost:5500,"
+        "http://127.0.0.1:5500,http://localhost:3000,http://127.0.0.1:3000"
+    )
     mqtt_broker_host: str = "localhost"
     mqtt_broker_port: int = 8883
     mqtt_username: str = ""
